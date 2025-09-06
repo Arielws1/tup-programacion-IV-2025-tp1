@@ -1,0 +1,13 @@
+@url=http://localhost:3000
+
+### Crear nuevo polígono
+POST {{url}}/poligonos
+Content-Type: application/json
+
+{
+  "largo": 50,
+  "ancho": 50
+}
+
+### Lista de todos los polígonos
+GET {{url}}/poligonos
