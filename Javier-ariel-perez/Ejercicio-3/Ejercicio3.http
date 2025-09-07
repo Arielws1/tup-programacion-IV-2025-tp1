@@ -1,5 +1,14 @@
 @url = http://localhost:3000
 
+### Nueva tarea
+POST {{url}}/tareas
+Content-Type: application/json
+
+{
+  "nombre": "Comunicacion",
+  "completada": true
+}
+
 ### Todas las tareas
 GET {{url}}/tareas
 Content-Type: application/json
@@ -16,13 +25,4 @@ Content-Type: application/json
 GET {{url}}/tareas?completada=false
 Content-Type: application/json
 
-###
 
-### Nueva tarea
-POST {{url}}/tareas
-Content-Type: application/json
-
-{
-  "nombre": "Comunicacion",
-  "completada": true
-}
