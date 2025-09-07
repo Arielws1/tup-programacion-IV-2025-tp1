@@ -5,39 +5,45 @@ const port = 3000;
 
 app.use(express.json());
 
-const poligonos = []; 
-let nextId = 1;
-
-
-app.get("/poligonos", (req, res) => {
-  const Tipo = poligonos.map((f) => ({
-    ...f,
-    tipo: f.largo === f.ancho ? "Cuadrado" : "Rectángulo"
-  }));
-  res.json({ success: true, data: Tipo });
-});
-
+const poligonos = [];
 
 app.post("/poligonos", (req, res) => {
   const { largo, ancho } = req.body;
 
-  if (largo === undefined || ancho === undefined || largo <= 0 || ancho <= 0) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Largo o ancho no válido" });
+  if (!largo || !ancho || largo <= 0 || ancho <= 0) {
+    return res.status(400).json({ error: "Largo y ancho deben ser positivos" });
   }
 
-  const nuevoPoligono = {
-    id: nextId++,
-    largo,
-    ancho,
-    perimetro: 2 * (largo + ancho),
-    superficie: largo * ancho
-  };
+  const perimetro = 2 * (largo + ancho);
+  const superficie = largo * ancho;
 
-  poligonos.push(nuevoPoligono); 
+  const nuevo = { largo, ancho, perimetro, superficie };
+  poligonos.push(nuevo);
 
-  res.status(201).json({ success: true, data: nuevoPoligono });
+  res.status(201).json({ mensaje: "Polígono agregado", poligono: nuevo });
+});
+
+app.get("/poligonos", (req, res) => {
+  const resultados = poligonos.map((p) => {
+    const tipo = p.largo === p.ancho ? "Cuadrado" : "Rectángulo";
+    return { ...p, tipo };
+  });
+
+  res.json(resultados);
+});
+
+
+app.get("/poligonos/:id", (req, res) => {
+  const id = req.params.id; 
+
+  if (id < 0 || id >= poligonos.length) {
+    return res.status(404).json({ error: "Polígono no encontrado" });
+  }
+
+  const p = poligonos[id];
+  const tipo = p.largo === p.ancho ? "Cuadrado" : "Rectángulo";
+
+  res.json({ ...p, tipo });
 });
 
 app.listen(port, () => {
