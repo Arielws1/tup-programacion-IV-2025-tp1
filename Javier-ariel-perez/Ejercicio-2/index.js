@@ -64,70 +64,50 @@ app.get("/alumnos/:id", (req, res) => {
 app.post("/alumnos", (req, res) => {
   const { nombre, nota1, nota2, nota3 } = req.body;
 
-  if (!nombre || isNaN(nota1) || isNaN(nota2) || isNaN(nota3)) {
-    return res.status(400).json({ success: false, message: "Datos no válidos" });
+  if (!nombre || !nota1 || !nota2 || !nota3) {
+    return res.status(400).json({ error: "Faltan datos" });
   }
 
-
-  const existe = alumnos.find(
-    (a) => a.nombre.toLowerCase() === nombre.toLowerCase()
-  );
-  if (existe) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Ya es alumno" });
+  if (alumnos.find((a) => a.nombre.toLowerCase() === nombre.toLowerCase())) {
+    return res.status(400).json({ error: "El alumno ya existe" });
   }
 
-  const Alumnonuevo = {
+  const nuevo = {
     id: nextId++,
-    nombre: nombre.trim(),
+    nombre,
     nota1: Number(nota1),
     nota2: Number(nota2),
     nota3: Number(nota3),
   };
 
-  alumnos.push(Alumnonuevo);
-
-  res.status(201).json({ success: true, data: Alumnonuevo });
+  alumnos.push(nuevo);
+  res.status(201).json(nuevo);
 });
 
 
 app.put("/alumnos/:id", (req, res) => {
   const id = Number(req.params.id);
-  if (isNaN(id) || id <= 0) {
-    return res.status(400).json({ success: false, message: "ID inválido" });
-  }
-
   const { nombre, nota1, nota2, nota3 } = req.body;
 
-  if (!nombre || isNaN(nota1) || isNaN(nota2) || isNaN(nota3)) {
-    return res.status(400).json({ success: false, message: "Datos inválidos" });
+  const alumno = alumnos.find((a) => a.id === id);
+  if (!alumno) {
+    return res.status(404).json({ error: "Alumno no encontrado" });
   }
 
-  
-  let alumnoEncontrado = alumnos.find((a) => a.id === id);
-  if (!alumnoEncontrado) {
-    return res
-      .status(404)
-      .json({ success: false, message: "Alumno no encontrado" });
+  if (!nombre || !nota1 || !nota2 || !nota3) {
+    return res.status(400).json({ error: "Faltan datos" });
   }
 
-
-  const repetido = alumnos.find(
-    (a) => a.nombre.toLowerCase() === nombre.toLowerCase() && a.id !== id
-  );
-  if (repetido) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Ya es alumno" });
+  if (alumnos.find((a) => a.nombre.toLowerCase() === nombre.toLowerCase() && a.id !== id)) {
+    return res.status(400).json({ error: "El nombre ya está usado" });
   }
 
-  alumnoEncontrado.nombre = nombre.trim();
-  alumnoEncontrado.nota1 = Number(nota1);
-  alumnoEncontrado.nota2 = Number(nota2);
-  alumnoEncontrado.nota3 = Number(nota3);
+  alumno.nombre = nombre;
+  alumno.nota1 = Number(nota1);
+  alumno.nota2 = Number(nota2);
+  alumno.nota3 = Number(nota3);
 
-  res.json({ success: true, data: alumnoEncontrado });
+  res.json(alumno);
 });
 
 app.listen(port, () => {
