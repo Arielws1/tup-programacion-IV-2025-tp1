@@ -1,28 +1,34 @@
-@url = http://localhost:3000
+@url=http://localhost:3000
 
-### Nueva tarea
+### Lista de todas las tareas
+GET {{url}}/tareas
+
+### Crear tarea 1
 POST {{url}}/tareas
 Content-Type: application/json
 
 {
-  "nombre": "Comunicacion",
+  "nombre": "Aprender Node",
+  "completada": false
+}
+
+### Crear tarea 2
+POST {{url}}/tareas
+Content-Type: application/json
+
+{
+  "nombre": "Escribir documentación",
   "completada": true
 }
 
-### Todas las tareas
-GET {{url}}/tareas
-Content-Type: application/json
-
-###
-
-### Tareas completadas
+### Lista completadas
 GET {{url}}/tareas?completada=true
-Content-Type: application/json
 
-###
-
-### Tareas no completadas 
+### Lista no completadas
 GET {{url}}/tareas?completada=false
-Content-Type: application/json
 
+### Consultar  por índice 
+GET {{url}}/tareas/0
 
+### Consultar  por índice 
+GET {{url}}/tareas/1
