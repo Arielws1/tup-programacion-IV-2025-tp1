@@ -1,0 +1,28 @@
+@url = http://localhost:3000
+
+### Todas las tareas
+GET {{url}}/tareas
+Content-Type: application/json
+
+###
+
+### Tareas completadas
+GET {{url}}/tareas?completada=true
+Content-Type: application/json
+
+###
+
+### Tareas no completadas 
+GET {{url}}/tareas?completada=false
+Content-Type: application/json
+
+###
+
+### Nueva tarea
+POST {{url}}/tareas
+Content-Type: application/json
+
+{
+  "nombre": "Comunicacion",
+  "completada": true
+}
