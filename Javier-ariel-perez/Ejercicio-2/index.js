@@ -10,7 +10,7 @@ let nextId = 1;
 
 
 app.get("/alumnos", (req, res) => {
-  const Estado = alumnos.map((a) => {
+  const resultados = alumnos.map((a) => {
     const promedio = (a.nota1 + a.nota2 + a.nota3) / 3;
     let estado = "Reprobado";
     if (promedio >= 8) estado = "Promocionado";
@@ -19,9 +19,25 @@ app.get("/alumnos", (req, res) => {
     return { ...a, promedio, estado };
   });
 
-  res.json({ success: true, data: Estado });
+  res.json(resultados);
 });
 
+
+app.get("/alumnos/:id", (req, res) => {
+  const id = Number(req.params.id);
+  const alumno = alumnos.find((a) => a.id === id);
+
+  if (!alumno) {
+    return res.status(404).json({ error: "Alumno no encontrado" });
+  }
+
+  const promedio = (alumno.nota1 + alumno.nota2 + alumno.nota3) / 3;
+  let estado = "Reprobado";
+  if (promedio >= 8) estado = "Promocionado";
+  else if (promedio >= 6) estado = "Aprobado";
+
+  res.json({ ...alumno, promedio, estado });
+});
 
 app.get("/alumnos/:id", (req, res) => {
   const id = Number(req.params.id);
