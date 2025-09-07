@@ -36,7 +36,8 @@ app.post("/tareas", (req, res) => {
     return res.status(400).json({ success: false, message: "Tarea ya existe" });
   }
 
-  const tareaNueva = {
+
+    const tareaNueva = {
     id: nextId++,
     nombre: nombre.trim(),
     completada: completada === true
